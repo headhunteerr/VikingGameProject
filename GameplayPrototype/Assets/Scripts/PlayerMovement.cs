@@ -33,13 +33,12 @@ public class PlayerMovement : MonoBehaviour {
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
+        bool jump = Input.GetButton("Jump");
 
-        Move(h, v, Input.GetButton("Jump"));
-
-        /*if (Input.GetButton("Jump"))
+        if (h != 0 || v != 0)
         {
-            Jump();
-        }*/
+            Move(h, v, jump);
+        }
 
         Rotate();
 
@@ -65,7 +64,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void Rotate()
     {
-        transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X"), 0));
+        cameraPivot.transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X"), 0));
         cameraPivot.transform.Rotate(new Vector3(Input.GetAxis("Mouse Y"), 0, 0));
         cameraPivot.transform.rotation = Quaternion.Euler(new Vector3(cameraPivot.transform.rotation.eulerAngles.x, cameraPivot.transform.rotation.eulerAngles.y, 0));
     }
