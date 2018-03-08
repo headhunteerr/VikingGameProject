@@ -37,23 +37,18 @@ public class PlayerMovement : MonoBehaviour {
 
         if (h != 0 || v != 0)
         {
-            Move(h, v, jump);
+            Move(h, v);
         }
 
         Rotate();
-
-        Animate(h, v);
 	}
 
-    void Move(float h, float v, bool jump)
+    void Move(float h, float v)
     {
+        transform.Rotate(new Vector3(0, cameraPivot.transform.rotation.eulerAngles.y, 0));
         Vector3 movement = new Vector3(h, 0, v);
-        movement = transform.TransformDirection(movement);
+        //movement = transform.TransformDirection(movement);
         movement *= speed;
-        if (jump)
-        {
-            movement.y = jumpSpeed;
-        }
         playerController.Move(movement * Time.deltaTime);
     }
 
@@ -64,15 +59,16 @@ public class PlayerMovement : MonoBehaviour {
 
     void Rotate()
     {
-        cameraPivot.transform.Rotate(new Vector3(0, Input.GetAxis("Mouse X"), 0));
-        cameraPivot.transform.Rotate(new Vector3(Input.GetAxis("Mouse Y"), 0, 0));
+        cameraPivot.transform.Rotate(new Vector3(Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0));
+        if (cameraPivot.transform.rotation.eulerAngles.x >= 70 && cameraPivot.transform.rotation.eulerAngles.x < 90)
+        {
+            Debug.Log(cameraPivot.transform.rotation.eulerAngles.ToString());
+            cameraPivot.transform.rotation = Quaternion.Euler(new Vector3(70, cameraPivot.transform.rotation.eulerAngles.y, 0));
+        }
+        if (cameraPivot.transform.rotation.eulerAngles.x <= 340 && cameraPivot.transform.rotation.eulerAngles.x > 180)
+        {
+            cameraPivot.transform.rotation = Quaternion.Euler(new Vector3(340, cameraPivot.transform.rotation.eulerAngles.y, 0));
+        }
         cameraPivot.transform.rotation = Quaternion.Euler(new Vector3(cameraPivot.transform.rotation.eulerAngles.x, cameraPivot.transform.rotation.eulerAngles.y, 0));
-    }
-
-    void Animate(float h, float v)
-    {
-        bool walking = h != 0f || v != 0f;
-
-        playerAnimator.SetBool("IsWalking", walking);
     }
 }
